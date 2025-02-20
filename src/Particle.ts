@@ -46,7 +46,7 @@ export class Particle {
         const n = this.getNormal(ipos.x, ipos.y)
 
         this.speed = this.speed.add(
-            vec2(n.x, n.z)
+            vec2(n.x, n.y)
                 .mul(dt)
                 .mul(1/this.volume * density)
         )
