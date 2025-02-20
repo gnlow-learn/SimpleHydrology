@@ -15,7 +15,7 @@ render(html`
             const canvas = el as HTMLCanvasElement
             heightMap.render(canvas)
 
-            const particles = Array.from({ length: 1 }, () =>
+            const particles = Array.from({ length: 20000 }, () =>
                 new Particle(heightMap)
             )
 

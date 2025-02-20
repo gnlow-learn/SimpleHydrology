@@ -11,13 +11,13 @@ export class Particle {
     speed = vec2(0, 0)
 
     volume = 1
-    sediment = 1
+    sediment = 0
 
     constructor(
         heightMap: HeightMap,
         pos = vec2(
-            Math.random() * heightMap.height,
             Math.random() * heightMap.width,
+            Math.random() * heightMap.height,
         ),
     ) {
         this.pos = pos
@@ -36,11 +36,11 @@ export class Particle {
     }
 
     step() {
-        const dt = 0.01
+        const dt = 1.2
         const density = 1
-        const friction = 0.1
-        const depositionRate = 1
-        const evapRate = 0.01
+        const friction = 0.05
+        const depositionRate = 0.1
+        const evapRate = 0.001
 
         const ipos = vec2(this.pos.x, this.pos.y)
         const n = this.getNormal(ipos.x, ipos.y)
