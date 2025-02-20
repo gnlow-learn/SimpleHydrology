@@ -2,7 +2,6 @@ export class HeightMap {
     data
     constructor(data: number[][]) {
         this.data = data
-        console.log(this.width, this.height)
     }
 
     get width() {
@@ -35,14 +34,16 @@ export class HeightMap {
         const canvas = document.createElement("canvas")
         canvas.width = image.width
         canvas.height = image.height
-        
+
         const ctx = canvas.getContext("2d")!
 
         ctx.drawImage(image, 0, 0)
 
+        const imageData = ctx.getImageData(0, 0, image.width, image.height)
+
         const arr = Array.from({ length: image.width }, (_, x) =>
             Array.from({ length: image.height }, (_, y) =>
-                ctx.getImageData(x, y, 1, 1).data[0]
+                imageData.data[(x+y*image.width)*4]
             )
         )
         return new HeightMap(arr)
