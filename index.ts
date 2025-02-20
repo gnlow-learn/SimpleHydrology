@@ -1,3 +1,5 @@
+import "https://esm.sh/adorable-css@1.6.2"
+
 import { html, render, ref } from "./src/deps.ts"
 
 import { HeightMap } from "./src/HeightMap.ts"
@@ -15,7 +17,7 @@ render(html`
             const canvas = el as HTMLCanvasElement
             heightMap.render(canvas)
 
-            const particles = Array.from({ length: 20000 }, () =>
+            const particles = Array.from({ length: 200000 }, () =>
                 new Particle(heightMap)
             )
 
