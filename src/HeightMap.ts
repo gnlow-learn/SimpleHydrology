@@ -1,3 +1,9 @@
+import { Vec2 } from "./deps.ts"
+
+const mod =
+(a: number, b: number) =>
+    ((a % b) + b) % b
+
 export class HeightMap {
     data
     constructor(data: number[][]) {
@@ -9,6 +15,27 @@ export class HeightMap {
     }
     get height() {
         return this.data[0].length
+    }
+
+    cleanCoord(x: number, y: number) {
+        return [
+            mod(Math.floor(x), this.width),
+            mod(Math.floor(y), this.height),
+        ]
+    }
+    at(x_: number, y_: number) {
+        const [x, y] = this.cleanCoord(x_, y_)
+        return this.data[Math.floor(x)][Math.floor(y)]
+    }
+    atV(v: Vec2) {
+        return this.at(v.x, v.y)
+    }
+    setAt(x_: number, y_: number, value: number) {
+        const [x, y] = this.cleanCoord(x_, y_)
+        this.data[Math.floor(x)][Math.floor(y)] = value
+    }
+    setAtV(v: Vec2, value: number) {
+        this.setAt(v.x, v.y, value)
     }
 
     toImageData() {
@@ -24,6 +51,10 @@ export class HeightMap {
             this.width,
             this.height,
         )
+    }
+    render(canvas: HTMLCanvasElement) {
+        const ctx = canvas.getContext("2d")!
+        ctx.putImageData(this.toImageData(), 0, 0)
     }
 
     static async fromPath(path: string) {

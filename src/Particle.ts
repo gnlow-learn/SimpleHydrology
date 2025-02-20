@@ -3,6 +3,7 @@ import {
     vec2,
     vec3,
 } from "./deps.ts"
+import { HeightMap } from "./HeightMap.ts"
 
 export class Particle {
     pos
@@ -13,18 +14,21 @@ export class Particle {
     sediment = 1
 
     constructor(
-        pos: Vec2,
-        heightmap: number[][],
+        heightMap: HeightMap,
+        pos = vec2(
+            Math.random() * heightMap.height,
+            Math.random() * heightMap.width,
+        ),
     ) {
         this.pos = pos
-        this.heightmap = heightmap
+        this.heightmap = heightMap
     }
 
     getNormal(x: number, y: number) {
-        const L = this.heightmap[x-1][y]
-        const R = this.heightmap[x+1][y]
-        const T = this.heightmap[x][y+1]
-        const B = this.heightmap[x][y-1]
+        const L = this.heightmap.at(x-1, y)
+        const R = this.heightmap.at(x+1, y)
+        const T = this.heightmap.at(x, y+1)
+        const B = this.heightmap.at(x, y-1)
 
         const n = vec3(R-L, B-T, -2)
 
@@ -32,13 +36,13 @@ export class Particle {
     }
 
     step() {
-        const dt = 1
+        const dt = 0.01
         const density = 1
         const friction = 0.1
         const depositionRate = 1
         const evapRate = 0.01
 
-        const ipos = this.pos
+        const ipos = vec2(this.pos.x, this.pos.y)
         const n = this.getNormal(ipos.x, ipos.y)
 
         this.speed = this.speed.add(
@@ -57,19 +61,21 @@ export class Particle {
             this.volume
             * this.speed.size
             * (
-                this.heightmap[ipos.x][ipos.y]
-              - this.heightmap[this.pos.x][this.pos.y]
+                this.heightmap.atV(ipos)
+              - this.heightmap.atV(this.pos)
             )
         )
 
         const cdiff = c_eq - this.sediment
 
         this.sediment += dt * depositionRate * cdiff
-        this.heightmap[ipos.x][ipos.y] -=
-            dt
+        this.heightmap.setAtV(ipos,
+            this.heightmap.atV(ipos)
+            - dt
             * this.volume
             * depositionRate
             * cdiff
+        )
         
         this.volume *= 1 - dt * evapRate
     }
