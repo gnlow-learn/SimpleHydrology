@@ -1,4 +1,4 @@
-import { Vec2 } from "./deps.ts"
+import { vec2, Vec2 } from "./deps.ts"
 
 const mod =
 (a: number, b: number) =>
@@ -36,5 +36,19 @@ export class Grid<T> {
     }
     setAtV(v: Vec2, value: T) {
         this.setAt(v.x, v.y, value)
+    }
+
+    static fromDimension<T>(
+        w: number,
+        h: number,
+        fill: (pos: Vec2) => T,
+    ) {
+        return new this(
+            Array.from({ length: w }, (_, x) =>
+                Array.from({ length: h }, (_, y) =>
+                    fill(vec2(x, y))
+                )
+            )
+        )
     }
 }
