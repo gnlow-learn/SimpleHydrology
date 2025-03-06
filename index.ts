@@ -3,7 +3,7 @@ import "https://esm.sh/adorable-css@1.6.2"
 import { html, render, ref } from "./src/deps.ts"
 
 import { HeightMap } from "./src/HeightMap.ts"
-import { Particle } from "./src/Particle.ts"
+import { World } from "./src/World.ts"
 
 const heightMap = await HeightMap.fromPath("./static/heightMap.png")
 
@@ -17,14 +17,12 @@ render(html`
             const canvas = el as HTMLCanvasElement
             heightMap.render(canvas)
 
-            const particles = Array.from({ length: 200000 }, () =>
-                new Particle(heightMap)
-            )
+            const world = new World(heightMap)
 
             while (true) {
                 await tick()
                 heightMap.render(canvas)
-                particles.forEach(particle => particle.step())
+                world.erode(1)
             }
         })}
     ></canvas>
