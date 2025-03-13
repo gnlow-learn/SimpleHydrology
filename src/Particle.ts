@@ -8,8 +8,6 @@ import { HeightMap } from "./HeightMap.ts"
 import { Grid } from "./Grid.ts"
 
 export class Particle {
-    heightmap
-
     age = 0
     pos
     speed = vec2(0, 0)
@@ -20,11 +18,6 @@ export class Particle {
     grid
 
     constructor(
-        heightMap: HeightMap,
-        pos = vec2(
-            Math.random() * heightMap.width,
-            Math.random() * heightMap.height,
-        ),
         grid: Grid<{
             height: number
             discharge: number
@@ -37,18 +30,21 @@ export class Particle {
 
             rootDensity: number
         }>,
+        pos = vec2(
+            Math.random() * grid.width,
+            Math.random() * grid.height,
+        ),
     ) {
         this.pos = pos
-        this.heightmap = heightMap
 
         this.grid = grid
     }
 
     getNormal(x: number, y: number) {
-        const L = this.heightmap.at(x-1, y)
-        const R = this.heightmap.at(x+1, y)
-        const T = this.heightmap.at(x, y+1)
-        const B = this.heightmap.at(x, y-1)
+        const L = this.grid.at(x-1, y).height
+        const R = this.grid.at(x+1, y).height
+        const T = this.grid.at(x, y+1).height
+        const B = this.grid.at(x, y-1).height
 
         const n = vec3(R-L, B-T, -2)
 
