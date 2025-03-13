@@ -15,7 +15,18 @@ export class World {
         rootDensity: number
     }>
     constructor(heightMap: HeightMap) {
-        this.grid = heightMap
+        this.grid = heightMap.map(height => ({
+            height,
+            discharge: 0,
+            momentumX: 0,
+            momentumY: 0,
+
+            dischargeTrack: 0,
+            momentumXTrack: 0,
+            momentumYTrack: 0,
+
+            rootDensity: 0,
+        }))
     }
     
     erode(cycles: number) {

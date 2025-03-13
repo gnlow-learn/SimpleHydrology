@@ -39,13 +39,11 @@ export class Grid<T> {
     }
     map<O>(f: (cell: T, pos: Vec2) => O) {
         return new Grid<O>(this.data.map((l, x) =>
-            l.forEach((d, y) => f(d, vec2(x, y)))
+            l.map((d, y) => f(d, vec2(x, y)))
         ))
     }
     forEach(f: (cell: T, pos: Vec2) => void) {
-        this.data.forEach((l, x) =>
-            l.forEach((d, y) => f(d, vec2(x, y)))
-        )
+        this.map(f)
     }
 
     static fromDimension<T>(
