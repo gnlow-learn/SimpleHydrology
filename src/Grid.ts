@@ -37,6 +37,16 @@ export class Grid<T> {
     setAtV(v: Vec2, value: T) {
         this.setAt(v.x, v.y, value)
     }
+    map<O>(f: (cell: T, pos: Vec2) => O) {
+        return new Grid<O>(this.data.map((l, x) =>
+            l.forEach((d, y) => f(d, vec2(x, y)))
+        ))
+    }
+    forEach(f: (cell: T, pos: Vec2) => void) {
+        this.data.forEach((l, x) =>
+            l.forEach((d, y) => f(d, vec2(x, y)))
+        )
+    }
 
     static fromDimension<T>(
         w: number,
