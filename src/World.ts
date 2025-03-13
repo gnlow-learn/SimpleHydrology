@@ -1,6 +1,6 @@
 import { Vec2, vec2 } from "./deps.ts"
 import { Grid } from "./Grid.ts"
-import { HeightMap } from "./HeightMap.ts"
+import { HydroGrid } from "./HydroGrid.ts"
 import { Particle } from "./Particle.ts"
 
 export class World {
@@ -20,19 +20,8 @@ export class World {
 
         rootDensity: number
     }>
-    constructor(heightMap: HeightMap) {
-        this.grid = heightMap.map(height => ({
-            height,
-            discharge: 0,
-            momentumX: 0,
-            momentumY: 0,
-
-            dischargeTrack: 0,
-            momentumXTrack: 0,
-            momentumYTrack: 0,
-
-            rootDensity: 0,
-        }))
+    constructor(grid: HydroGrid) {
+        this.grid = grid
     }
     
     erode(cycles: number) {
@@ -48,7 +37,7 @@ export class World {
 
             while (drop.descend());
 
-            this.grid.forEach((cell, pos) => {
+            this.grid.forEach(cell => {
                 cell.discharge =
                     (1-this.lrate)*cell.discharge
                     + this.lrate*cell.dischargeTrack
